@@ -29,6 +29,8 @@ devices:
 schema:
   devices:
     - server_address: match(^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$)
-      bus_id: str
+      bus_id: str?
+      vendor_id: str?
+      device_id: str?
 options:
   devices: []

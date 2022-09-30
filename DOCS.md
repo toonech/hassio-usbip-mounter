@@ -29,7 +29,8 @@ devices:
   - server_address: 10.0.0.100 
     bind: 1-1.4
   - server_address: 10.0.0.50 
-    bind: 1-1.5
+    vendor_id: 0658
+    device_id: 0200
 ```
 
 ### Option list `devices`
@@ -44,6 +45,10 @@ This must be the ip address of the usbipd server that is exporting the device. U
 #### Option `devices`: `bus_id`
 
 This is the bind-id of the exported usb devices on the usbip server. Check the usbip server configuration section for more information.
+
+#### Option 'devices': 'vendor_id', 'device_id'
+
+The bus id of devices can change, vendor and device id can be used instead to bind these devices.
 
 ## Usbip Server Configuration
 

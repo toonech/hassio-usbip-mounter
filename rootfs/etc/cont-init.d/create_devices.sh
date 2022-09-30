@@ -7,6 +7,8 @@
 # Configure mount script for all usbip devices
 declare server_address
 declare bus_id
+declare vendor_id
+declare device_id
 declare script_directory
 declare mount_script
 
@@ -30,7 +32,14 @@ if ! bashio::fs.file_exists "${mount_script}"; then
   for device in $(bashio::config 'devices|keys'); do
     server_address=$(bashio::config "devices[${device}].server_address")
     bus_id=$(bashio::config "devices[${device}].bus_id")
-    bashio::log.info "Adding device from server ${server_address} on bus ${bus_id}"
-    echo "/usr/sbin/usbip --debug attach -r ${server_address} -b ${bus_id}" >> "${mount_script}"
+    if [-z "${bus_id}"]; then
+      vendor_id=$(bashio::config "devices[${device}].vendor_id")
+      device_id=$(bashio::config "devices[${device}].device_id")
+      bashio::log.info "Adding device from server ${server_address} with vendor id ${vendor_id} and device id ${device_id}"
+      echo "/usr/sbin/usbip --debug attach -r ${server_address} --$(/usr/sbin/usbip list -p -r ${server_address} \| grep \'\#usbid=${vendor_id}\':\'${device_id}\'\# \| cut \'-d\#\' -f1)"
+    else
+      bashio::log.info "Adding device from server ${server_address} on bus ${bus_id}"
+      echo "/usr/sbin/usbip --debug attach -r ${server_address} -b ${bus_id}" >> "${mount_script}"
+    fi
   done
 fi
